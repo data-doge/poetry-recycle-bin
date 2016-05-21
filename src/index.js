@@ -1,30 +1,28 @@
 import $ from 'jquery'
 import last from 'lodash.last'
 import Diff from 'text-diff'
-var diff = new Diff()
 import filter from 'lodash.filter'
 import Tokenizer from 'sentence-tokenizer'
-var tokenizer = new Tokenizer('')
 import flattenDeep from 'lodash.flattendeep'
 
-var snapshots = ['']
 var $pad = $('#pad')
+var snapshots = ['']
+var diff = new Diff()
+var tokenizer = new Tokenizer('')
 
-$('#store-version-btn').one('click', function (e) {
+$('#store-version-btn').one('click', function () {
   $(this).text('save version')
 })
 
-
-$('#store-version-btn').click((e) => {
+$('#store-version-btn').click(() => {
   var snapshot = $pad.val()
 
-  var differences = diff.main(last(snapshots), snapshot)
+  var diffs = diff.main(last(snapshots), snapshot)
 
-  var deletions = flattenDeep(filter(differences, (difference) => {
-    return difference[0] === -1
-  }).map((difference) => {
-    return difference[1]
-  }))
+  var deletions = flattenDeep(
+    filter(diffs, (dif) => dif[0] === -1)
+    .map((dif) => dif[1])
+  )
 
   var deletedWords = flattenDeep(deletions.map((deletion) => {
     tokenizer.setEntry(deletion)
