@@ -5,4 +5,20 @@ html, body {
 
 body {
   font-family: sans-serif;
+  margin: 0;
+}
+
+#pad {
+  position: fixed;
+  width: 50%;
+  top: 10px;
+  left: 10px;
+  bottom: 10px;
+  padding: 10px;
+}
+
+#btns {
+  position: fixed;
+  top: 10px;
+  right: 10px;
 }

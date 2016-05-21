@@ -1,19 +1,18 @@
-
-# poetry-recycle-bin
+## poetry-recycle-bin
 
 take raw text, track versions, store all removed words
 
-## how
+from conversations with alana baum
 
 ### install
 
 ```
 git clone https://github.com/data-doge/poetry-recycle-bin
-cd 
-npm install
+cd poetry-recycle-bin
+npm i
 ```
 
-## develop
+### develop
 
 ```
 npm start
@@ -21,13 +20,7 @@ npm start
 
 browse to <http://localhost:9966/>.
 
-## test
-
-```
-npm test
-```
-
-## deploy
+### deploy
 
 ```
 npm run deploy
