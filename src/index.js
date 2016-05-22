@@ -2,8 +2,9 @@ import $ from 'jquery'
 import last from 'lodash.last'
 import Diff from 'text-diff'
 import toCSV from 'array-to-csv'
-import each from 'lodash.foreach'
+import map from 'lodash.map'
 import downloadCSV from './download-csv'
+import concat from 'concat-arrays'
 import Snapshot from './snapshot.js'
 import Histogram from './histogram.js'
 var histogram = new Histogram()
@@ -22,27 +23,23 @@ $(document).keyup(function (e) {
   if (e.keyCode === 27) {
     var text = $pad.val()
     var diffs = diff.main(last(snapshots).text, text)
-
     var snapshot = new Snapshot(text, diffs)
     snapshots.push(snapshot)
-
     histogram.addSnapshot(snapshot)
   }
 })
 
 $('#download-csv-btn').click(function () {
-  var csvArray = []
-  var snapshotHeaders = ['text', 'deletions', 'additions']
-  var deletionHistogramHeaders = ['deleted words', 'count']
-  var additionHistogramHeaders = ['added words', 'count']
-  csvArray.push(snapshotHeaders)
-  snapshots.forEach((snapshot) => csvArray.push(snapshot.toArray()))
-  csvArray.push(['', '', ''])
-  csvArray.push(deletionHistogramHeaders)
-  each(histogram.deletions, (count, word) => { csvArray.push([word, count]) })
-  csvArray.push(['', '', ''])
-  csvArray.push(additionHistogramHeaders)
-  each(histogram.additions, (count, word) => { csvArray.push([word, count]) })
-  var csvString = toCSV(csvArray)
+  var arr = concat(
+    [['text', 'deletions', 'additions']],
+    snapshots.map((snapshot) => snapshot.toArray()),
+    [['', '', '']],
+    [['deleted words', 'count']],
+    map(histogram.deletions, (count, word) => [word, count]),
+    [['', '', '']],
+    [['added words', 'count']],
+    map(histogram.additions, (count, word) => [word, count])
+  )
+  var csvString = toCSV(arr)
   downloadCSV({csvString: csvString, filename: 'meow'})
 })

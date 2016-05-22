@@ -1,4 +1,5 @@
 import flattenDeep from 'lodash.flattendeep'
+import map from 'lodash.map'
 import Tokenizer from 'sentence-tokenizer'
 var tokenizer = new Tokenizer('')
 
