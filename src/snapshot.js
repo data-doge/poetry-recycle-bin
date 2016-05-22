@@ -9,6 +9,10 @@ class Snapshot {
     this.additions = this._filteredDiffsByType(diffs, 'addition')
   }
 
+  toArray () {
+    return [this.text, this.deletions.join(' / '), this.additions.join(' / ')]
+  }
+
   _filteredDiffsByType (diffs, type) {
     var flag = type === 'addition' ? 1 : -1
     return flattenDeep(

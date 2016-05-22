@@ -34,9 +34,11 @@
   },
   "homepage": "https://github.com/data-doge/poetry-recycle-bin",
   "dependencies": {
+    "array-to-csv": "^1.0.1",
     "jquery": "^2.2.4",
     "lodash.filter": "^4.4.0",
     "lodash.flattendeep": "^4.2.0",
+    "lodash.foreach": "^4.3.0",
     "lodash.last": "^3.0.0",
     "sentence-tokenizer": "0.0.7",
     "text-diff": "^1.0.1"
