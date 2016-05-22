@@ -12,21 +12,22 @@ var diff = new Diff()
 $('#start-tracking-btn').click(function () {
   var text = $pad.val()
   $(this).hide()
-  $('#store-version-btn').show()
   snapshots.push(new Snapshot(text))
 })
 
-$('#store-version-btn').click(() => {
-  var text = $pad.val()
-  var diffs = diff.main(last(snapshots).text, text)
+$(document).keyup(function (e) {
+  if (e.keyCode === 27) {
+    var text = $pad.val()
+    var diffs = diff.main(last(snapshots).text, text)
 
-  var snapshot = new Snapshot(text, diffs)
-  snapshots.push(snapshot)
+    var snapshot = new Snapshot(text, diffs)
+    snapshots.push(snapshot)
 
-  histogram.addSnapshot(snapshot)
+    histogram.addSnapshot(snapshot)
 
-  console.log('data: ', {
-    snapshots: snapshots,
-    histogram: histogram
-  })
+    console.log('data: ', {
+      snapshots: snapshots,
+      histogram: histogram
+    })
+  }
 })
