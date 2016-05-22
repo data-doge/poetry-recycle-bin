@@ -20,7 +20,7 @@ $('#start-tracking-btn').click(function () {
 })
 
 $(document).keyup(function (e) {
-  if (e.keyCode === 27) {
+  if (e.keyCode === 27 && snapshots.length > 0) {
     var text = $pad.val()
     var diffs = diff.main(last(snapshots).text, text)
     var snapshot = new Snapshot(text, diffs)
