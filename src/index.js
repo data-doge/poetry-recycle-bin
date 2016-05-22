@@ -4,20 +4,31 @@ import Diff from 'text-diff'
 import filter from 'lodash.filter'
 import Tokenizer from 'sentence-tokenizer'
 import flattenDeep from 'lodash.flattendeep'
+import isEmpty from 'is-empty'
 
 var $pad = $('#pad')
-var snapshots = ['']
+
+var data = {
+  snapshots: [],
+  histogram: {
+    deletions: {},
+    additions: {}
+  }
+}
+
 var diff = new Diff()
 var tokenizer = new Tokenizer('')
 
-$('#store-version-btn').one('click', function () {
-  $(this).text('save version')
+$('#start-tracking-btn').click(function () {
+  $(this).hide()
+  $('#store-version-btn').show()
+  data.snapshots.push({text: $pad.val(), additions: '', deletions: ''})
 })
 
 $('#store-version-btn').click(() => {
-  var snapshot = $pad.val()
+  var text = $pad.val()
 
-  var diffs = diff.main(last(snapshots), snapshot)
+  var diffs = diff.main(last(data.snapshots).text, text)
 
   var deletions = flattenDeep(
     filter(diffs, (dif) => dif[0] === -1)
@@ -30,7 +41,34 @@ $('#store-version-btn').click(() => {
     return tokenizer.getTokens()
   }))
 
-  console.log('deletedWords: ', deletedWords)
+  var additions = flattenDeep(
+    filter(diffs, (dif) => dif[0] === 1)
+    .map((dif) => dif[1])
+  )
 
-  snapshots.push(snapshot)
+  var addedWords = flattenDeep(additions.map((additions) => {
+    tokenizer.setEntry(additions)
+    tokenizer.getSentences()
+    return tokenizer.getTokens()
+  }))
+
+  data.snapshots.push({text: text, additions: additions, deletions: deletions})
+
+  addedWords.forEach((word) => {
+    if (data.histogram.additions[word]) {
+      data.histogram.additions[word]++
+    } else {
+      data.histogram.additions[word] = 1
+    }
+  })
+
+  deletedWords.forEach((word) => {
+    if (data.histogram.deletions[word]) {
+      data.histogram.deletions[word]++
+    } else {
+      data.histogram.deletions[word] = 1
+    }
+  })
+
+  console.log('data: ', data)
 })
